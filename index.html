@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>MultiSingularity</title>
+        <style>
+            body {
+                background: #333;
+                color: white;
+                font-family: "Roboto", sans-serif;
+                padding-left: 5px;
+                padding-right: 5px;
+                text-align: center;
+                font-size: 24px;
+            }
+            button {
+                color: red;
+                font-family: "Arial", sans-serif;
+                font-size: 1em;
+                border-color: purple;
+                background: black;
+                padding: 3px;
+                border-width: 2px;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: 0.2s;
+            }
+            button:hover {
+                color: blue;
+                background: red;
+                border-radius: 0px;
+            }
+            #num {
+                font-size: 5.0em;
+                color: #00FF00;
+                font-weight: bold;
+            }
+            #progress {
+                font-size: 1.5em;
+            }
+            #specs {
+                font-size: 1.75em;
+                font-weight: bold;
+            }
+            #money {
+                font-size: 1.2em;
+                font-weight: bold;
+            }
+        </style>
+        <script>
+            var game = {
+                numeron: 1,
+                reqi: 0,
+                specs: 0,
+                money: {
+                    total: 0,
+                    spent: 0,
+                    shown: 0,
+                },
+                pwrCost: 10,
+                pwr: 1,
+            }
+            var date = 0;
+            function buyPower() {
+                if(game.money.shown >= game.pwrCost){
+                    game.money.spent+=game.pwrCost;
+                    game.pwrCost*=1.1;
+                    document.getElementById("cost").textContent = Math.round(game.pwrCost);
+                    game.pwr++;
+                }
+            }
+            //(n*n+1)/2
+            //0.5+(Math.pow((1+8*game.reqi),0.5))/2
+            setInterval(function(){
+                if(date != 0){
+                game.reqi+=Math.pow(1.01,game.specs)*game.pwr*(Date.now()-date)/1000;
+                }
+                date = Date.now();
+                game.numeron = Math.floor(0.5+(Math.pow((1+8*game.reqi),0.5))/2)
+                game.specs = Math.floor(Math.pow(game.numeron,2/3))
+                game.money.total = Math.floor(Math.pow(game.specs,1.5))
+                game.money.shown = Math.floor(game.money.total-game.money.spent) // Calculates the amount of money in the program that's shown.
+                document.getElementById("num").textContent = game.numeron;
+                document.getElementById("progress").textContent = Math.floor(game.reqi)-(game.numeron-1)*(game.numeron)/2 + " / " + game.numeron;
+                document.getElementById("specs").textContent = game.specs;
+                document.getElementById("money").textContent = game.money.shown;
+                document.getElementById("ans").textContent = "";
+            },1000/30)
+        </script>
+    </head>
+    <body>
+    <h1>MultiSingularity</h1>
+    <span id="num">1</span><br>
+    <span id="progress">0 / 1</span><br>
+    You have found <span id="specs">0</span> special numbers. <br>
+    <b>$</b><span id="money">0</span> <button onclick="buyPower()">Get more computer power, Cost: $<span id="cost">10</span></button>
+    <span id="ans"></span>
+    </body>
+</html>
