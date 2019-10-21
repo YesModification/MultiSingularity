@@ -24,11 +24,24 @@
                 border-radius: 8px;
                 cursor: pointer;
                 transition: 0.2s;
+                margin: 5px;
             }
             button:hover {
                 color: blue;
                 background: red;
                 border-radius: 0px;
+            }
+            .normalBtn {
+                background: rgb(207, 207, 207);
+                color: rgb(65, 176, 232);
+                border-color: blue;
+                padding: 5px;
+                padding-top: 3px;
+                padding-bottom: 3px;
+            }
+            .normalBtn:hover {
+                background: rgb(65, 176, 232);
+                color: rgb(207, 207, 207);
             }
             #num {
                 font-size: 5.0em;
@@ -46,6 +59,21 @@
                 font-size: 1.2em;
                 font-weight: bold;
             }
+            #normal {
+                display: block;
+                border-top: 5px double black;
+            }
+            #stats {
+                display: none;
+                border-top: 5px double black;
+            }
+            #info {
+                display: none;
+                border-top: 5px double black;
+                float: center;
+                margin: 0 auto;
+                width: 500px;
+            }
         </style>
         <script>
             var game = {
@@ -59,8 +87,13 @@
                 },
                 pwrCost: 10,
                 pwr: 1,
+                stats: {
+                    startTime: Date.now(),
+                    timePlayed: 0,
+                },
             }
             var date = 0;
+            var currentPage = "normal";
             function buyPower() {
                 if(game.money.shown >= game.pwrCost){
                     game.money.spent+=game.pwrCost;
@@ -70,6 +103,11 @@
                     game.pwr*=1.1;
                 }
             }
+            function goto(tab){
+                document.getElementById(currentPage).style.display = "none";
+                document.getElementById(tab).style.display = "block";
+                currentPage = tab;
+            }
             //(n*n+1)/2
             //0.5+(Math.pow((1+8*game.reqi),0.5))/2
             setInterval(function(){
@@ -77,24 +115,45 @@
                 game.reqi+=Math.pow(1.01,game.specs)*game.pwr*(Date.now()-date)/1000;
                 }
                 date = Date.now();
+                game.stats.timePlayed = (Date.now()-game.stats.startTime)/1000;
                 game.numeron = Math.floor(0.5+(Math.pow((1+8*game.reqi),0.5))/2)
                 game.specs = Math.floor(Math.pow(game.numeron,2/3))
                 game.money.total = Math.floor(Math.pow(game.specs,1.5))
                 game.money.shown = Math.floor(game.money.total-game.money.spent) // Calculates the amount of money in the program that's shown.
                 document.getElementById("num").textContent = game.numeron;
                 document.getElementById("progress").textContent = Math.floor(game.reqi)-(game.numeron-1)*(game.numeron)/2 + " / " + game.numeron;
+                document.getElementById("cps").textContent = (Math.pow(1.01,game.specs)*game.pwr).toFixed(2);
                 document.getElementById("specs").textContent = game.specs;
                 document.getElementById("money").textContent = game.money.shown;
+                if(game.stats.timePlayed < 60){
+                    document.getElementById("statistic-time-played").textContent = (game.stats.timePlayed%60).toFixed(2);
+                } else if(game.stats.timePlayed < 3600){
+                    document.getElementById("statistic-time-played").textContent = (Math.floor(game.stats.timePlayed/60)%60) + " minutes and " + ((game.stats.timePlayed%60).toFixed(2));
+                }
                 document.getElementById("ans").textContent = "";
             },1000/30)
         </script>
     </head>
     <body>
-    <h1>MultiSingularity</h1>
-    <span id="num">1</span><br>
-    <span id="progress">0 / 1</span><br>
-    You have found <span id="specs">0</span> special numbers. <br>
-    <b>$</b><span id="money">0</span> <button onclick="buyPower()">Get more computer power, Cost: $<span id="cost">10</span></button>
-    <span id="ans"></span>
+        <h1>MultiSingularity</h1>
+        <button onclick = "goto('normal')" class = "normalBtn">Computer</button>
+        <button onclick = "goto('stats')" class = "normalBtn">Statistics</button>
+        <button onclick = "goto('info')" class = "normalBtn">Info</button>
+        <div id="normal">
+            <span id="num">1</span><br>
+            <span id="progress">0 / 1</span><br>
+            with <span id="cps">1</span> computations / sec<br><br>
+            You have found <span id="specs">0</span> special numbers. <br>
+            <strong>$</strong><span id="money">0</span> <button onclick="buyPower()">Get
+             more computer power, Cost: $<span id="cost">10</span></button>
+            <span id="ans"></span>
+        </div>
+        <div id="stats">
+            <p>You've played for <span id="statistic-time-played">0</span> seconds.</p>
+        </div>
+        <div id="info">
+            <h2>The Computer</h2>
+            <p>This is the start of the game. As soon as you start, you are running a computer at an extremely slow 1 computation / second.
+        </div>
     </body>
 </html>
