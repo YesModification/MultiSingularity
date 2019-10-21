@@ -73,6 +73,7 @@
                 float: center;
                 margin: 0 auto;
                 width: 500px;
+                font-size: 0.75em;
             }
         </style>
         <script>
@@ -129,6 +130,10 @@
                     document.getElementById("statistic-time-played").textContent = (game.stats.timePlayed%60).toFixed(2);
                 } else if(game.stats.timePlayed < 3600){
                     document.getElementById("statistic-time-played").textContent = (Math.floor(game.stats.timePlayed/60)%60) + " minutes and " + ((game.stats.timePlayed%60).toFixed(2));
+                } else if(game.stats.timePlayed < 24*60*60){
+                    document.getElementById("statistic-time-played").textContent = (Math.floor(game.stats.timePlayed/3600)%24) + " hours, " + (Math.floor(game.stats.timePlayed/60)%60) + " minutes, and " + ((game.stats.timePlayed%60).toFixed(2));
+                } else if(game.stats.timePlayed < 365*24*60*60){
+                    document.getElementById("statistic-time-played").textContent = (Math.floor(game.stats.timePlayed/(24*60*60))%365) + " days, " + (Math.floor(game.stats.timePlayed/3600)%24) + " hours, " + (Math.floor(game.stats.timePlayed/60)%60) + " minutes, and " + ((game.stats.timePlayed%60).toFixed(2));
                 }
                 document.getElementById("ans").textContent = "";
             },1000/30)
@@ -153,7 +158,9 @@
         </div>
         <div id="info">
             <h2>The Computer</h2>
-            <p>This is the start of the game. As soon as you start, you are running a computer at an extremely slow 1 computation / second.
+            <p>This is the start of the game. As soon as you start, you are running a computer at an extremely slow 1 computation / second.</p>
+            <p>The purpose of such a computer is to find <strong>special numbers</strong>, which are numbers that give a multiplicative 1% boost to production for each one found. However, they gradually become harder to find.</p>
+            <p>Eventually, while getting money for each special number found to buy upgrades, you reach a singularity point.</p>
         </div>
     </body>
 </html>
