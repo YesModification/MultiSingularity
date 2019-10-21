@@ -43,6 +43,9 @@
                 background: rgb(65, 176, 232);
                 color: rgb(207, 207, 207);
             }
+            .infoParagraph {
+                border-bottom: 2px solid white;
+            }
             #num {
                 font-size: 5.0em;
                 color: #00FF00;
@@ -95,11 +98,20 @@
             }
             var date = 0;
             var currentPage = "normal";
+            function abbreviate(number, start){
+                var exp = Math.log10(number);
+                var flrExp = Math.floor(exp);
+                if(number < 1000){
+                    return number.toFixed(start);
+                } else {
+                    return (number/Math.pow(10,flrExp)).toFixed(2) + "e" + flrExp;
+                }
+            }
             function buyPower() {
                 if(game.money.shown >= game.pwrCost){
                     game.money.spent+=game.pwrCost;
                     game.pwrCost*=1.1;
-                    document.getElementById("cost").textContent = Math.round(game.pwrCost);
+                    document.getElementById("cost").textContent = abbreviate(Math.round(game.pwrCost),0);
                     game.pwr++;
                     game.pwr*=1.1;
                 }
@@ -121,11 +133,11 @@
                 game.specs = Math.floor(Math.pow(game.numeron,2/3))
                 game.money.total = Math.floor(Math.pow(game.specs,1.5))
                 game.money.shown = Math.floor(game.money.total-game.money.spent) // Calculates the amount of money in the program that's shown.
-                document.getElementById("num").textContent = game.numeron;
-                document.getElementById("progress").textContent = Math.floor(game.reqi)-(game.numeron-1)*(game.numeron)/2 + " / " + game.numeron;
-                document.getElementById("cps").textContent = (Math.pow(1.01,game.specs)*game.pwr).toFixed(2);
-                document.getElementById("specs").textContent = game.specs;
-                document.getElementById("money").textContent = game.money.shown;
+                document.getElementById("num").textContent = abbreviate(game.numeron,0);
+                document.getElementById("progress").textContent = abbreviate(Math.floor(game.reqi)-(game.numeron-1)*(game.numeron)/2,0) + " / " + abbreviate(game.numeron,0);
+                document.getElementById("cps").textContent = abbreviate(Math.pow(1.01,game.specs)*game.pwr,2);
+                document.getElementById("specs").textContent = abbreviate(game.specs);
+                document.getElementById("money").textContent = abbreviate(game.money.shown);
                 if(game.stats.timePlayed < 60){
                     document.getElementById("statistic-time-played").textContent = (game.stats.timePlayed%60).toFixed(2);
                 } else if(game.stats.timePlayed < 3600){
@@ -157,10 +169,18 @@
             <p>You've played for <span id="statistic-time-played">0</span> seconds.</p>
         </div>
         <div id="info">
-            <h2>The Computer</h2>
-            <p>This is the start of the game. As soon as you start, you are running a computer at an extremely slow 1 computation / second.</p>
-            <p>The purpose of such a computer is to find <strong>special numbers</strong>, which are numbers that give a multiplicative 1% boost to production for each one found. However, they gradually become harder to find.</p>
-            <p>Eventually, while getting money for each special number found to buy upgrades, you reach a singularity point.</p>
+            <div id="computerParagraph" class="infoParagraph">
+                <h2>The Computer</h2>
+                <p>This is the start of the game. As soon as you start, you are running a computer at an extremely slow 1 computation / second.</p>
+                <p>The purpose of such a computer is to find <strong>special numbers</strong>, which are numbers that give a multiplicative 1% boost to production for each one found. However, they gradually become harder to find.</p>
+                <p>Eventually, while getting money for each special number found to buy upgrades, you reach a singularity point: A technological singularity.</p>
+            </div>
+            <div id="singularityParagraph" class="infoParagraph">
+                <h2>Singularity</h2>
+                <p>When it looks like everything is becoming extremely inflated, you reach a technological singularity: It's not just 1e308 infinity, it's <em>actual</em> infinity.</p>
+                <p>As soon as that happens, you get a thing called a <strong>singularity point</strong>. It allows you to purchase some upgrades, as well as find a better universe. However, everything else resets.</p>
+                <h3>Singularity Upgrades</h3>
+            </div>
         </div>
     </body>
 </html>
